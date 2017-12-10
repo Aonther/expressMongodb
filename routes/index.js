@@ -4,15 +4,14 @@ var router = express.Router();
 var mongoose = require('mongoose');
 var model = require('../models/model');
 var Demo = model.Demo;
-
 mongoose.connect('mongodb://localhost/express_demo');
 
 // 首页
 router.get('/', function(req, res, next) {
-    Demo.find(function(err, docs) {
+    Demo.find(function(err, doc) {
         res.render('index', {
             title: 'Express+MongoDb示例',
-            demos: docs
+            demos: doc
         });
     });
 });
@@ -36,10 +35,8 @@ router.post('/add.html', function(req, res, next) {
         content: req.body.content
     });
 
-    console.log('======================create========================');
 
     demo.save(function(err, doc) {
-        console.log(doc);
         res.redirect('/');
     });
     
@@ -51,9 +48,7 @@ router.get('/del.html', function(req, res, next) {
     var id = req.query.id;
 
     if (id && id != '') {
-        console.log('=====================delete id = ' + id);
         Demo.findByIdAndRemove(id, function(err, docs) {
-            console.log(docs);
             res.redirect('/');
         });
     }
@@ -67,7 +62,6 @@ router.get('/update.html', function(req, res, next) {
 
     if (id && id != '') {
         Demo.findById(id, function(err, docs) {
-            console.log('========================findById(\"' + id + '\")=======================\n' + docs);
             res.render('update', {
                 title: '修改数据',
                 demo: docs
@@ -89,9 +83,7 @@ router.post('/update.html', function(req, res, next) {
     var id = req.body.id;
 
     if (id && id != '') {
-        console.log('=======================update id = ' + id);
         Demo.findByIdAndUpdate(id, demo, function(err, docs) {
-            console.log(docs);
             res.redirect('/');
         });
     }
